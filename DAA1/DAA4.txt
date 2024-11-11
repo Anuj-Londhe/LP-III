@@ -1,0 +1,32 @@
+def solve_knapsack():
+    val = [50, 100, 150, 200]  # Values of the items
+    wt = [8, 16, 32, 40]  # Weights of the items
+    W = 64  # Total capacity of the knapsack
+    n = len(val)  # Number of items
+    
+    # Create a memoization table
+    dp = [[-1 for _ in range(W + 1)] for _ in range(n + 1)]
+    
+    def knapsack(W, n):
+        if n == 0 or W == 0:
+            return 0
+        
+        # If the result is already computed, return it from the memo table
+        if dp[n][W] != -1:
+            return dp[n][W]
+        
+        # If the current item's weight is more than the current capacity, skip it
+        if wt[n-1] > W:
+            dp[n][W] = knapsack(W, n-1)
+        else:
+            # Otherwise, consider both excluding and including the item
+            dp[n][W] = max(
+                val[n-1] + knapsack(W - wt[n-1], n-1),  # Include the item
+                knapsack(W, n-1)  # Exclude the item
+            )
+        
+        return dp[n][W]
+    
+    print(f"Maximum value in the knapsack: {knapsack(W, n)}")
+
+solve_knapsack()
